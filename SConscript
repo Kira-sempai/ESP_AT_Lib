@@ -60,7 +60,7 @@ if 1:
 targetEnv.AppendUnique(
 	CPPPATH=[
 		Dir('lwesp/src/include/'),
-		Dir('lwesp/src/include/system/port/cmsis_os/'),
+		Dir('lwesp/src/include/system/port/atom_threads/'),
 	]
 )
 
