@@ -53,10 +53,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-typedef ATOM_MUTEX osMutexId_t;
-typedef ATOM_SEM   osSemaphoreId_t;
-typedef ATOM_QUEUE osMessageQueueId_t;
-typedef ATOM_TCB   osThreadId_t;
+typedef ATOM_MUTEX* osMutexId_t;
+typedef ATOM_SEM*   osSemaphoreId_t;
+typedef ATOM_QUEUE* osMessageQueueId_t;
+typedef ATOM_TCB*   osThreadId_t;
 
 #define osMessageQueueGet atomQueueGetTimed
 

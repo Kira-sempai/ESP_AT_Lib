@@ -54,6 +54,10 @@
 #ifndef _CMSIS_OS_H
 #define _CMSIS_OS_H
  
+#include <stdint.h>
+#include <stddef.h>
+
+
 /// \note MUST REMAIN UNCHANGED: \b osCMSIS identifies the CMSIS-RTOS API version.
 #define osCMSIS           0x10002      ///< API version (main [31:16] .sub [15:0])
  
@@ -73,9 +77,13 @@
 #define osFeature_Wait         1       ///< osWait function: 1=available, 0=not available
 #define osFeature_SysTick      1       ///< osKernelSysTick functions: 1=available, 0=not available
  
-#include <stdint.h>
-#include <stddef.h>
- 
+
+#include <atomthreads/atommutex.h>
+#include <atomthreads/atomsem.h>
+#include <atomthreads/atomqueue.h>
+#include <atomthreads/atom.h>
+#include <atomthreads/atomtimer.h>
+
 #ifdef  __cplusplus
 extern "C"
 {
@@ -120,8 +128,14 @@ typedef enum  {
   osErrorOS               =  0xFF,       ///< unspecified RTOS error: run-time error but no other error message fits.
   os_status_reserved      =  0x7FFFFFFF  ///< prevent from enum down-size compiler optimization.
 } osStatus;
- 
- 
+
+typedef ATOM_TCB os_thread_cb;
+typedef ATOM_MUTEX os_mutex_cb;
+typedef ATOM_SEM os_semaphore_cb;
+typedef ATOM_QUEUE os_messageQ_cb;
+typedef ATOM_TIMER os_timer_cb;
+
+
 /// Timer type value for the timer definition.
 /// \note MUST REMAIN UNCHANGED: \b os_timer_type shall be consistent in every CMSIS-RTOS.
 typedef enum  {
