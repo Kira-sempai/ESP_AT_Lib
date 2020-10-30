@@ -35,7 +35,7 @@ sources.extend(File(Split("""
 	lwesp/src/lwesp/lwesp_wps.c
 	
 	
-	lwesp/src/system/lwesp_ll_stm32.c
+	lwesp/src/system/lwesp_ll_stm32f205vg_swk.c
 	lwesp/src/system/lwesp_mem_lwmem.c
 	lwesp/src/system/lwesp_sys_atom_threads.c
 	
