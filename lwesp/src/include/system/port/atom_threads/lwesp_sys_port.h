@@ -53,10 +53,10 @@ extern "C" {
 #endif /* __cplusplus */
 
 
-typedef ATOM_MUTEX* osMutexId_t;
-typedef ATOM_SEM*   osSemaphoreId_t;
-typedef ATOM_QUEUE* osMessageQueueId_t;
-typedef ATOM_TCB*   osThreadId_t;
+typedef os_mutex_cb     osMutexId_t;
+typedef os_semaphore_cb osSemaphoreId_t;
+typedef os_messageQ_cb  osMessageQueueId_t;
+typedef os_thread_cb    osThreadId_t;
 
 #define osMessageQueueGet atomQueueGetTimed
 
@@ -72,26 +72,26 @@ typedef ATOM_TCB*   osThreadId_t;
  *
  * It is used by middleware as base type of mutex.
  */
-typedef osMutexId_t         lwesp_sys_mutex_t;
+typedef ATOM_MUTEX * lwesp_sys_mutex_t;
 
 /**
  * \brief           System semaphore type
  *
  * It is used by middleware as base type of mutex.
  */
-typedef osSemaphoreId_t     lwesp_sys_sem_t;
+typedef ATOM_SEM   * lwesp_sys_sem_t;
 
 /**
  * \brief           System message queue type
  *
  * It is used by middleware as base type of mutex.
  */
-typedef osMessageQueueId_t  lwesp_sys_mbox_t;
+typedef ATOM_QUEUE * lwesp_sys_mbox_t;
 
 /**
  * \brief           System thread ID type
  */
-typedef osThreadId_t        lwesp_sys_thread_t;
+typedef ATOM_TCB   * lwesp_sys_thread_t;
 
 /**
  * \brief           System thread priority type

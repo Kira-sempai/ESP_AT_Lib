@@ -129,11 +129,11 @@ typedef enum  {
   os_status_reserved      =  0x7FFFFFFF  ///< prevent from enum down-size compiler optimization.
 } osStatus;
 
-typedef ATOM_TCB os_thread_cb;
-typedef ATOM_MUTEX os_mutex_cb;
-typedef ATOM_SEM os_semaphore_cb;
-typedef ATOM_QUEUE os_messageQ_cb;
-typedef ATOM_TIMER os_timer_cb;
+typedef ATOM_TCB   * os_thread_cb;
+typedef ATOM_MUTEX * os_mutex_cb;
+typedef ATOM_SEM   * os_semaphore_cb;
+typedef ATOM_QUEUE * os_messageQ_cb;
+typedef ATOM_TIMER * os_timer_cb;
 
 
 /// Timer type value for the timer definition.
