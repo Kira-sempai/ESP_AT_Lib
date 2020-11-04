@@ -1,35 +1,6 @@
 /**
- * \file            lwesp_ll_stm32f429zi_nucleo.c
+ * \file            lwesp_ll_stm32f205vg_swk.c
  * \brief           Low-level communication with ESP device for STM32F429ZI-Nucleo using DMA
- */
-
-/*
- * Copyright (c) 2020 Tilen MAJERLE
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE
- * AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- *
- * This file is part of LwESP - Lightweight ESP-AT parser library.
- *
- * Author:          Tilen MAJERLE <tilen@majerle.eu>
- * Version:         $_version_$
  */
 
 /*
@@ -38,10 +9,10 @@
  * UART:                USART2
  * STM32 TX (ESP RX):   GPIOD, GPIO_PIN_5
  * STM32 RX (ESP TX):   GPIOD, GPIO_PIN_6
- * RESET:               GPIOD, GPIO_PIN_1
+ * RESET:               GPIOD, GPIO_PIN_10
  * GPIO0:               GPIOD, GPIO_PIN_4
- * GPIO2:               GPIOD, GPIO_PIN_7
- * CH_PD:               GPIOD, GPIO_PIN_3
+ * GPIO2:               GPIOD, GPIO_PIN_11
+ * CH_PD:               GPIOD, GPIO_PIN_7
  *
  * USART_DMA:           DMA1
  * USART_DMA_STREAM:    DMA_STREAM_5
@@ -50,11 +21,13 @@
 
 #if !__DOXYGEN__
 
-#include "stm32f4xx_ll_bus.h"
-#include "stm32f4xx_ll_usart.h"
-#include "stm32f4xx_ll_gpio.h"
-#include "stm32f4xx_ll_dma.h"
-#include "stm32f4xx_ll_rcc.h"
+#include <hardware/mcu.h>
+
+#include <drivers/mcu/stm32f2xx_hal_driver/Inc/stm32f2xx_ll_dma.h>
+#include <drivers/mcu/stm32f2xx_hal_driver/Inc/stm32f2xx_ll_usart.h>
+#include <drivers/mcu/stm32f2xx_hal_driver/Inc/stm32f2xx_ll_gpio.h>
+#include <drivers/mcu/stm32f2xx_hal_driver/Inc/stm32f2xx_ll_bus.h>
+
 
 /* USART */
 #define LWESP_USART                           USART2
@@ -92,22 +65,22 @@
 /* RESET PIN */
 #define LWESP_RESET_PORT_CLK                  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD)
 #define LWESP_RESET_PORT                      GPIOD
-#define LWESP_RESET_PIN                       LL_GPIO_PIN_1
+#define LWESP_RESET_PIN                       LL_GPIO_PIN_10
 
-/* GPIO0 PIN */
+/* GPIO0 PIN */ //programmable output
 #define LWESP_GPIO0_PORT_CLK                  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD)
 #define LWESP_GPIO0_PORT                      GPIOD
 #define LWESP_GPIO0_PIN                       LL_GPIO_PIN_4
 
-/* GPIO2 PIN */
+/* GPIO2 PIN */  //programmable output, also use for boot options
 #define LWESP_GPIO2_PORT_CLK                  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD)
 #define LWESP_GPIO2_PORT                      GPIOD
-#define LWESP_GPIO2_PIN                       LL_GPIO_PIN_7
+#define LWESP_GPIO2_PIN                       LL_GPIO_PIN_11
 
-/* CH_PD PIN */
+/* CH_PD PIN */ //EN? power on/off
 #define LWESP_CH_PD_PORT_CLK                  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOD)
 #define LWESP_CH_PD_PORT                      GPIOD
-#define LWESP_CH_PD_PIN                       LL_GPIO_PIN_3
+#define LWESP_CH_PD_PIN                       LL_GPIO_PIN_7
 
 /* Include STM32 generic driver */
 #include "../system/lwesp_ll_stm32.c"

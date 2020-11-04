@@ -32,7 +32,57 @@
 #include "system/lwesp_sys.h"
 #include "cmsis_os.h"
 
-static osMutexId sys_mutex;
+static lwesp_sys_mutex_t sys_mutex;
+
+osThreadId_t osThreadNew (osThreadFunc_t func, void *argument, const osThreadAttr_t *attr) {
+	ATOM_TCB *tcb_ptr = (ATOM_TCB *)malloc(sizeof(ATOM_TCB));
+
+	typedef void (*entry_point_t)(uint32_t) ;
+
+	atomThreadCreate(tcb_ptr, attr->priority, (entry_point_t)func, (uint32_t)argument, attr->cb_mem + attr->cb_size, attr->cb_size);
+
+	return (osThreadId_t)tcb_ptr;
+}
+
+
+osStatus osMessageQueueGet (osMessageQueueId_t mq_id, void *msg_ptr, uint8_t *msg_prio, uint32_t timeout) {
+	//TODO
+	return 0;
+}
+
+/**
+* @brief  Create and Initialize a Recursive Mutex
+* @param  mutex_def     mutex definition referenced with \ref osMutex.
+* @retval  mutex ID for reference by other functions or NULL in case of error..
+*/
+ATOM_MUTEX * osRecursiveMutexCreate (const osMutexDef_t *mutex_def) {
+	ATOM_MUTEX *mutex = (ATOM_MUTEX *)malloc(sizeof(ATOM_MUTEX));
+
+	atomMutexCreate(mutex);
+
+	return mutex;
+}
+
+osStatus osMutexDelete(osMutexId_t mutex) {
+	const uint8_t res = atomMutexDelete(mutex);
+	free(mutex);
+
+	switch(res) {
+	case ATOM_OK: return osOK;
+	case ATOM_ERR_QUEUE: return osErrorParameter;
+	case ATOM_ERR_TIMER: return osErrorTimeoutResource;
+	}
+
+	return osErrorOS;
+}
+
+osStatus osRecursiveMutexWait (osMutexId_t mutex, uint32_t millisec) {
+	return atomMutexGet(mutex, millisec);
+}
+
+osStatus osRecursiveMutexRelease(osMutexId_t mutex) {
+	return atomMutexPut(mutex);
+}
 
 /**
  * \brief           Init system dependant parameters
@@ -44,8 +94,7 @@ static osMutexId sys_mutex;
  */
 uint8_t
 lwesp_sys_init(void) {
-    lwesp_sys_mutex_create(&sys_mutex);
-    return 1;
+    return lwesp_sys_mutex_create(&sys_mutex);
 }
 
 /**
@@ -350,7 +399,6 @@ uint8_t
 lwesp_sys_thread_create(lwesp_sys_thread_t* t, const char* name, lwesp_sys_thread_fn thread_func,
                       void* const arg, size_t stack_size, lwesp_sys_thread_prio_t prio) {
     const osThreadDef_t thread_def = {
-        (char*)name,
         (os_pthread)thread_func,
         (osPriority)prio,
         0,

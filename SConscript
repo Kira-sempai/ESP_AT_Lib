@@ -2,8 +2,11 @@ Import('*')
 
 sources = []
 
-targetEnv.RegisterModule('esp_at_lib', depend=['kernel'])
+targetEnv.RegisterModule('esp_at_lib', depend=['kernel'], reset=True)
+
 sources.extend(File(Split("""
+	module.c
+
 	lwesp/src/api/lwesp_netconn.c
 	
 	lwesp/src/cli/cli.c
